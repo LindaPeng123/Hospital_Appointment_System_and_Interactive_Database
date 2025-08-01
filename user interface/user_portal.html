@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Portal</title>
+    <link rel="stylesheet" href="./style/user_portal.css" />
+  </head>
+  <body>
+    <div class="user-info">
+      <h1>Welcome, <span id="user-name"></span>!</h1>
+      <p><strong>Gender:</strong> <span id="user-gender"></span></p>
+      <p><strong>Age:</strong> <span id="user-age"></span></p>
+      <p><strong>Phone Number:</strong> <span id="user-phone"></span></p>
+      <p><strong>Medication:</strong> <span id="user-medication"></span></p>
+      <p><strong>Allergies:</strong> <span id="user-allergies"></span></p>
+    </div>
+
+    <div class="appointment-actions">
+      <button id="make-appointment">Make an Appointment</button>
+      <button id="change-appointment">Change Appointment</button>
+      <button id="cancel-appointment">Cancel Appointment</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="./scripts/user_portal.js"></script>
+  </body>
+</html>

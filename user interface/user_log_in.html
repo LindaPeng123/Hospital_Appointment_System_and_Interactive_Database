@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <link rel="stylesheet" href="./style/log_in.css" />
+  </head>
+  <body>
+    <div class="header">
+      <img src="keck-medicine-usc.png" alt="Keck Medicine USC Logo" />
+    </div>
+    <div class="login-container">
+      <form id="login-form">
+        <h2>Login</h2>
+        <div class="form-group">
+          <label for="userid">Username:</label>
+          <input type="text" id="userid" name="userid" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit">Login</button>
+        <p><a href="register.html">Create Account</a></p>
+      </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+    <script src="./scripts/user_log_in.js"></script>
+  </body>
+</html>

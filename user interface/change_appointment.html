@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Change Appointment</title>
+    <link rel="stylesheet" href="./change_appointment.css" />
+    <script src="./util.js"></script>
+    <script>
+      // Define Hashing Function:
+      function hashFunction(userID) {
+        var hashValue = Array.from(userID).reduce(
+          (acc, char) => acc + char.charCodeAt(0),
+          0,
+        );
+        return hashValue % 3;
+      }
+
+      const userId = getUserId();
+
+      // Hash the logged-in user's name
+      var databaseNum = hashFunction(userId);
+
+      var dbUrl = "";
+      if (databaseNum === 0) {
+        dbUrl =
+          "https://hospital1-850e0-default-rtdb.firebaseio.com/appointments";
+      } else if (databaseNum === 1) {
+        dbUrl =
+          "https://hospital-2-f901a-default-rtdb.firebaseio.com/appointments";
+      } else if (databaseNum === 2) {
+        dbUrl =
+          "https://hospital-3-502e9-default-rtdb.firebaseio.com/appointments";
+      }
+
+
+      // when the date is changed, query the backend to get the appointments for the selected date
+      function onDateLoad(id) {
+        const date = document.getElementById(`new-date-${id}`).value;
+        queryAppointmentsByDate(
+          document.getElementById(`new-date-${id}`).value,
+          dbUrl,
+        ).then((appointments) => {
+          document
+            .getElementById(`new-time-${id}`)
+            .querySelectorAll("option")
+            .forEach((option) => {
+              const time = option.value;
+              const timeParts = time.split(":");
+              const dateParts = date.split("-");
+              const appointmentTime = new Date(
+                dateParts[0],
+                dateParts[1] - 1,
+                dateParts[2],
+                timeParts[0],
+                timeParts[1],
+              );
+
+              // Disable the option if the appointment time is in the past or already taken
+              option.disabled =
+                appointmentTime <= new Date() ||
+                appointments.includes(option.value);
+            });
+        });
+      }
+
+
+      // when submitting the form, update the appointment and show an alert
+      function onFormSubmit(event, id, reason) {
+        event.preventDefault();
+        updateAppointment(
+          id,
+          userId,
+          document.getElementById(`new-date-${id}`).value,
+          document.getElementById(`new-time-${id}`).value,
+          reason,
+          dbUrl,
+        ).then(() => {
+          alert("Appointment updated successfully!");
+          window.reload();
+        });
+      }
+
+
+      // When the user page is loaded, query the appointments by the user Id, then generate the page based on the appointment information and insert it into the HTML page.
+      document.addEventListener("DOMContentLoaded", () => {
+
+        queryAppointmentsByUserId(userId, dbUrl).then((appointments) => {
+          document.getElementById("appointments").innerHTML = appointments
+            .map(
+              (appointment) =>
+                `<div class="appointment">
+                <div class="appointment-details">
+                  <p><strong>Date:</strong> ${appointment.date}</p>
+                  <p><strong>Time:</strong> ${appointment.time}</p>
+                  <p><strong>Reason:</strong> ${appointment.reason}</p>
+                </div>
+      
+                <div class="appointment-form">
+                  <form onsubmit='onFormSubmit(event,"${appointment.id}","${appointment.reason}");'>
+                    <div class="form-group">
+                      <label for="new-date-${appointment.id}">Choose a new date:</label>
+                      <input
+                        type="date"
+                        class="date-picker"
+                        id="new-date-${appointment.id}"
+                        name="new_appointment_date"
+                        onchange='onDateLoad("${appointment.id}")'
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="new-time-${appointment.id}">Choose a new time:</label>
+                      <select id="new-time-${appointment.id}" name="new_appointment_time" required>
+                        <option value="">Select a time</option>
+                        <option value="09:00">09:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 AM</option>
+                        <option value="13:00">13:00 AM</option>
+                        <option value="14:00">14:00 AM</option>
+                        <option value="15:00">15:00 AM</option>
+                        <option value="16:00">16:00 AM</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <button type="submit">Update Appointment</button>
+                    </div>
+                  </form>
+                </div>
+              </div>`,
+            )
+            .join("\n");
+        });
+      });
+
+      // Function to go back to the previous page
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Current Appointment Details</h2>
+      <div id="appointments"></div>
+      <!-- Button to go back to the previous page -->
+      <div class="form-group">
+        <button type="button" onclick="goBack()">Go Back</button>
+      </div>
+    </div>
+  </body>
+</html>

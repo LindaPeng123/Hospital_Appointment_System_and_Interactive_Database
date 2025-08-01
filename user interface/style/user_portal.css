@@ -1,0 +1,59 @@
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+.user-info {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.user-info h1 {
+  color: #333;
+}
+
+.user-info p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.appointment-actions {
+  text-align: center;
+}
+
+.appointment-actions button {
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.appointment-actions button:hover {
+  background-color: #4cae4c;
+}
+
+.appointment-actions button#change-appointment {
+  background-color: #f0ad4e;
+}
+
+.appointment-actions button#change-appointment:hover {
+  background-color: #ec971f;
+}
+
+.appointment-actions button#cancel-appointment {
+  background-color: #d9534f;
+}
+
+.appointment-actions button#cancel-appointment:hover {
+  background-color: #c9302c;
+}

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cancel Appointment</title>
+    <link rel="stylesheet" href="./cancel_appointment.css" />
+    <script src="./util.js"></script>
+    <script>
+      // Define Hashing Function:
+      function hashFunction(userID) {
+        var hashValue = Array.from(userID).reduce(
+          (acc, char) => acc + char.charCodeAt(0),
+          0,
+        );
+        return hashValue % 3;
+      }
+
+      // Hash the logged-in user's name
+      var userId = getUserId();
+      var databaseNum = hashFunction(userId);
+
+      var dbUrl = "";
+      if (databaseNum === 0) {
+        dbUrl =
+          "https://hospital1-850e0-default-rtdb.firebaseio.com/appointments";
+      } else if (databaseNum === 1) {
+        dbUrl =
+          "https://hospital-2-f901a-default-rtdb.firebaseio.com/appointments";
+      } else if (databaseNum === 2) {
+        dbUrl =
+          "https://hospital-3-502e9-default-rtdb.firebaseio.com/appointments";
+      }
+
+      // when submitting the form, call onDeleteAppointment function with event and appointment id. After sending the delete request to the database, alert the user that the appointment is canceled successfully and reload the page
+      function onDeleteAppointment(event, id) {
+        event.preventDefault();
+        deleteAppointmentsById(id, dbUrl).then(() => {
+          alert("Appointment canceled successfully!");
+          window.location.reload();
+        });
+      }
+
+      function goBack() {
+        window.history.back();
+      }
+
+
+      // search user id in the database and return all the appointments
+      document.addEventListener("DOMContentLoaded", () => {
+
+        queryAppointmentsByUserId(userId, dbUrl).then((appointments) => {
+          document.getElementById("appointments").innerHTML = appointments
+            .map((appointment) => {
+              return `
+            <p><strong>Date:</strong> ${appointment.date}</p>
+            <p><strong>Time:</strong> ${appointment.time}</p>
+            <p><strong>Reason:</strong> ${appointment.reason}</p>
+            <form onsubmit='onDeleteAppointment(event,"${appointment.id}");'>
+              <div class="form-group">
+                <button type="submit" class="cancel-button">
+                  Cancel Appointment
+                </button>
+              </div>
+            </form>
+          `;
+            })
+            .join("\n");
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Appointment Cancellation</h2>
+      <div id="appointments"></div>
+      <!-- Button to go back to the previous page -->
+      <div class="form-group">
+        <button type="button" onclick="goBack()">Go Back</button>
+      </div>
+    </div>
+  </body>
+</html>
